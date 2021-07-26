@@ -24,8 +24,8 @@ addUser: async (parent, context, args) => {
     return {token, user}
 },
 
-login: async (parent, {email, password})=>{
-const user = await User.findOne({email})
+login: async (parent, { email, password }) => {
+const user = await User.findOne({ email })
 if(!user){
     throw new AuthenticationError('Invalid email address');
 }
@@ -37,11 +37,11 @@ const token = signToken(user);
 return {token, user}
 },
 
-saveBook: async (parent, context, args)=>{
+saveBook: async (parent, context, {bookData})=>{
     if(context.user){
-        const updateUser = await User.findOneAndUpdate(
+        const updateUser = await User.findByIdAndUpdate(
             {_id: context.user._id},
-            {$addToSet:{bookInput: args.input}},
+            {$push:{ savedBooks: bookData}},
             {new: true}
         );
         return updateUser
