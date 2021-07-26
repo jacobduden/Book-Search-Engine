@@ -18,8 +18,8 @@ const resolvers = {
 
     Mutation: {
 
-addUser: async (parent, context, args) => {
-    const user = await User.create(args.body.variables)
+addUser: async (parent, args, context ) => {
+    const user = await User.create(args)
     const token = signToken(user)
     return {token, user}
 },
@@ -37,7 +37,7 @@ const token = signToken(user);
 return {token, user}
 },
 
-saveBook: async (parent, context, {bookData})=>{
+saveBook: async (parent, {bookData}, context)=>{
     if(context.user){
         const updateUser = await User.findByIdAndUpdate(
             {_id: context.user._id},
@@ -49,7 +49,7 @@ saveBook: async (parent, context, {bookData})=>{
     throw new AuthenticationError('You have to be logged in to save a book! Please sign in, or register a free account.')
 },
 
-removeBook: async (parent, context, args)=>{
+removeBook: async (parent, args, context)=>{
     if(context.user){
         const updateUser = await User.findOneAndUpdate(
             {_id: context.user._id},
